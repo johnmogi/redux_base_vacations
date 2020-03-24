@@ -20,4 +20,14 @@ router.get("/vacations/:id", async (request, response) => {
     response.status(500).send(err.message);
   }
 });
+// POST http://localhost:3000/api/vacations
+router.post("/vacations", async (request, response) => {
+  try {
+    const vac = request.body;
+    const addedVac = await vacLogic.addVacAsync(vac);
+    response.status(201).json(addedVac);
+  } catch (err) {
+    response.status(500).send(err.message);
+  }
+});
 module.exports = router;
