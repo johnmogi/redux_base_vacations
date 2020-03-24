@@ -9,7 +9,7 @@ async function getAllUsersAsync() {
 async function getAUserAsync(user) {
   const sql = `SELECT * FROM users WHERE userName = '${user.userName}' AND password = '${user.password}'`;
   const users = await dal.executeAsync(sql);
-  console.log(JSON(users));
+
   return users;
 }
 

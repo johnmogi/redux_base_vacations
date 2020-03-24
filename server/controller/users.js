@@ -1,21 +1,10 @@
-const dal = require("../dal");
+
 const express = require("express");
+const jwt = require("jsonwebtoken");
+
 const authLogic = require("../business-logic/user-logic");
 const router = express.Router();
 
-// const server = express();
-// const expressSession = require("express-session");
-// var cookieParser = require("cookie-parser");
-
-// server.use(
-//   expressSession({
-//     name: "userlog",
-//     secret: "let-me-in",
-//     resave: true,
-//     saveUninitialized: false
-//   })
-// );
-// server.use(cookieParser()); // Support Cookies
 
 // GET http://localhost:8626/api/users
 router.get("/users", async (request, response) => {
@@ -23,38 +12,58 @@ router.get("/users", async (request, response) => {
     const users = await authLogic.getAllUsersAsync();
     response.json(users);
   } catch (err) {
-    response.status(500).send(err.message);
+    response
+    .status(500)
+    .send(err.message);
   }
 });
 router.post("/login", async (request, response) => {
   try {
     const user = request.body;
-    // please fix later
-    const sql = `SELECT * FROM users WHERE userName = '${user.userName}' AND password = '${user.password}'`;
-    const users = await dal.executeAsync(sql);
-    request.session.isLogin = true;
-    console.log("isLogin: " + request.session.isLogin);
-
+    const userData = await authLogic.getAUserAsync(user);
+    // validate before?
+    jwt.sign({user}, 'secretkey',{expiresIn: '30s'},(err, token) =>{
+      console.log(token)
+    })
     response
-      .status(201)
-      .json(users)
-      .send();
+    .status(201)
+    .send(userData);
   } catch (err) {
-    response.status(403).send(err);
+    response.status(500).send(err.message);
   }
-});
-
-router.post("/status", (request, response) => {
-  if (!request.session.isLogin) {
-    response.status(403).send("Access Denied! Please Log-In!");
-    return;
-  }
-  response.send("still good");
 });
 
 router.post("/logout", (request, response) => {
   request.session.isLogin = false;
   response.send("user logged out");
 });
+router.post("/posts", verifyToken,(req, res) =>{
+  jwt.verify(req.token, 'secretkey', (err, authData) =>{
+    if(err){
+res.sendStatus(403)
+    }else{
 
+      res.json({
+        message: 'post created...',
+        authData
+      })
+    }
+  })
+})
+// token fotmat:
+// Authorization : Bearer <access_token>
+function verifyToken(req,res,next){
+const bearerHeader = req.headers['authorization']
+if (typeof bearerHeader !== 'undefined'){
+const bearer = bearerHeader.split(' ')
+// get token from array
+const bearerToken = bearer[1];
+req.token = bearerToken;
+// next middleware
+next();
+}else{
+  // forbidden
+  res.sendStatus(403);
+}
+}
 module.exports = router;

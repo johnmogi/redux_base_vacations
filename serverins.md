@@ -8,3 +8,5 @@
    https://medium.com/the-node-js-collection/making-your-node-js-work-everywhere-with-environment-variables-2da8cdf6e786
 6. create the folder  
    logical files- dal | bll | ctrl | app
+npm i jsonwebtoken  
+https://www.youtube.com/watch?time_continue=9&v=7nafaH9SddU&feature=emb_title  
