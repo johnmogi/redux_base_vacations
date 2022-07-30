@@ -1,0 +1,29 @@
+version: '3.1'
+
+services:
+
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: YpM88sT3bA5W
+      # take heed root user is root!
+      MYSQL_USER: adminuser
+      MYSQL_DATABASE: vacations
+
+  server:
+    hostname: server
+    container_name: vacations-server
+    build:  ./server 
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - "3000:3000"
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
