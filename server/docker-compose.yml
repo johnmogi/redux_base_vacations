@@ -1,0 +1,13 @@
+version: '3.1'
+services:
+    adminer:
+        image: adminer:4.8.1
+        restart: always
+        ports:
+          - 3600:8080
+dbMysql:
+    image: mysql:8.0.30
+    restart: always
+    environment:
+        MYSQL_ROOT_PASSWORD: process.env.MYSQL_ROOT_PASSWORD
+        MYSQL_DATABASE: process.env.DB

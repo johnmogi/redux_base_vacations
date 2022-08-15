@@ -10,7 +10,7 @@ RUN npm install
 
 COPY . ./
 
-ENV port=3000
-EXPOSE 3000
+ENV port=3306
+EXPOSE 3306
 
-CMD ["node", "app.js"]
+CMD ["npm", "run", "start"]

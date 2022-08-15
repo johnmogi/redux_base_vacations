@@ -3,6 +3,7 @@ const express = require("express");
 
 
 const { port } = require("./config");
+const { host } = require("./config");
 // const express = require("express");
 const expressSession = require("express-session");
 // const consController = require("./setup");
@@ -28,8 +29,5 @@ server.use(express.json());
 server.use("/api", vacsController);
 server.use("/api/auth", usersController);
 server.listen(port, () =>
-  console.log(`Server Vacations running on port ${port}`)
+  console.log(`Listening to Vacations running on http://${host}:${port}`)
 );
-// server.listen(port, () =>
-//   console.log("Listening to Vacations on http://localhost:3003")
-// );
